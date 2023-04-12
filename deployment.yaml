@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-docker-demo-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-app
+        image: sumughan124/hey-python-flask:0.0.3.RELEASE
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  selector:
+    app: flask-docker-demo-deployment
+  ports:
+  - port: 8000
+    targetPort: 5000
+  # type: LoadBalancer
